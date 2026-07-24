@@ -2,7 +2,7 @@ require('dotenv').config();
 const cors = require('cors')
 const express = require('express');
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT
 
 const uri = process.env.MONGO_URI;
@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Server is running ')
 })
 
 
@@ -55,6 +55,32 @@ async function run() {
     })
 
 
+
+
+     app.get('/projects/:id', async (req, res) => {
+    const { id } = req.params
+
+    // Validate before converting, otherwise you'll hit the BSONError
+    // you already ran into once.
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid project id' })
+    }
+
+    try {
+      const project = await projectCollection.findOne({
+        _id: new ObjectId(id),
+      })
+
+      if (!project) {
+        return res.status(404).json({ message: 'Project not found' })
+      }
+
+      res.status(200).json(project)
+    } catch (error) {
+      console.error('Error fetching project:', error)
+      res.status(500).json({ message: 'Failed to fetch project' })
+    }
+  })
 
 
   } finally {
