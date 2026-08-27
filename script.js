@@ -3,13 +3,20 @@ const cors = require('cors')
 const express = require('express');
 const app = express()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const contactRoutes = require("./routes/contact");
+
 const port = process.env.PORT
+
 
 const uri = process.env.MONGO_URI;
 
 
+
+
 app.use(cors())
 app.use(express.json());
+app.use("/api/contact", contactRoutes);
+
 
 
 app.get('/', (req, res) => {
