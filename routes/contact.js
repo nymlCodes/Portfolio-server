@@ -3,7 +3,7 @@ const { Resend } = require("resend");
 
 const router = express.Router();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.c);
 
 router.post("/", async (req, res) => {
   try {
